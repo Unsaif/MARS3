@@ -1,10 +1,5 @@
 import pandas as pd
 
-<<<<<<< HEAD:lib/general_stats.py
-def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
-=======
->>>>>>> ec6e6d7bd3e4548c5b550b664627e8a784ad53e7:lib/general_overview.py
-
 def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyla=None):
 
     """ Takes the dataframe from general_overview and the user-defined path to the stratification file to run general

@@ -103,8 +103,8 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut]
 
     # Get stats
-    species_stats = general_stats.general_stats(df, species_phylum_list, species_df_list, "species")
-    genus_stats = general_stats.general_stats(df, genus_phylum_list, genus_df_list, "genus") 
+    species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "species")
+    genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "genus") 
 
     if path_to_stratification_file is not None:
         stratification.split_df(species_stats, path_to_stratification_file)
