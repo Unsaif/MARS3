@@ -65,7 +65,7 @@ def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyl
     ratio_df = ratio_calc(final_df)
 
     final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
-    final_df.to_csv('test.csv')
+    final_df.to_csv('general_statistics.csv')
 
     return final_df
 
