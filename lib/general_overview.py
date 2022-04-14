@@ -1,6 +1,6 @@
 import pandas as pd
 
-def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyla=None):
+def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
     """ Takes the dataframe from general_overview and the user-defined path to the stratification file to run general
        statistics on the different values in the general_overview dataframe. It saves the statistics dataframe as a .csv
