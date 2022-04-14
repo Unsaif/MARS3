@@ -1,6 +1,6 @@
 import pandas as pd
 
-def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyla=None):
+def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
     total_phylum, associated_phylum, associated_agora_phylum = list_phylum_df
     reads_afteragora_df, reads_beforeagora_df, norm_cut_df = list_species_genus_dfs
@@ -65,7 +65,7 @@ def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyl
     ratio_df = ratio_calc(final_df)
 
     final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
-    final_df.to_csv('general_statistics.csv')
+    final_df.to_csv(f'MARS_output/general_statistics_{level}.csv')
 
     return final_df
 

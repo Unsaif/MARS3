@@ -68,6 +68,11 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     if not os.path.isdir("MARS_output"):
         os.mkdir("MARS_output")
 
+    absent_species_df.to_csv("MARS_output/absent_species.csv")
+    present_species_df.to_csv("MARS_output/present_species.csv")
+    absent_genus_df.to_csv("MARS_output/absent_genus.csv")
+    present_genus_df.to_csv("MARS_output/absent_genus.csv")
+
     # Save requested files
     for taxa in taxonomic_levels:
         try:
@@ -98,8 +103,8 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut]
 
     # Get stats
-    species_stats = general_stats.general_stats(df, species_phylum_list, species_df_list)
-    genus_stats = general_stats.general_stats(df, genus_phylum_list, genus_df_list)
+    species_stats = general_stats.general_stats(df, species_phylum_list, species_df_list, "species")
+    genus_stats = general_stats.general_stats(df, genus_phylum_list, genus_df_list, "genus") 
 
     if path_to_stratification_file is not None:
         stratification.split_df(species_stats, path_to_stratification_file)
