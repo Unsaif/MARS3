@@ -115,7 +115,9 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
         reads_loss_due_mapping = (associated_phylum_reads-agora_phylum_reads)/total_phylum_reads
 
         combined_df = pd.concat([total_phylum_reads, associated_phylum_reads, agora_phylum_reads, reads_loss_due_assocation, reads_loss_due_mapping], axis=0)
-
+        # ### Added to deal with 16s issue
+        combined_df = combined_df.dropna() 
+        # ###
         combined_df = combined_df.transpose()
         combined_df.columns = ['Total reads ' + phylum], ['Associated reads ' + phylum], \
                           ['Associated reads after agora ' + phylum], ['loss reads due to unassociation ' + phylum], \

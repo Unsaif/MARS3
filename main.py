@@ -71,7 +71,7 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     absent_species_df.to_csv("MARS_output/absent_species.csv")
     present_species_df.to_csv("MARS_output/present_species.csv")
     absent_genus_df.to_csv("MARS_output/absent_genus.csv")
-    present_genus_df.to_csv("MARS_output/absent_genus.csv")
+    present_genus_df.to_csv("MARS_output/present_genus.csv")
 
     # Save requested files
     for taxa in taxonomic_levels:
