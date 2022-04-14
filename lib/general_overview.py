@@ -96,32 +96,35 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
 def sum_rename_sort(df, name):
     df_sum = df.sum(axis=0)
     df_sumname = df_sum.rename(name)
-    df_f = df_sumname.sort_index()
+    df_sumname = df_sumname.sort_index()
 
-    return df_f
+    return df_sumname
 
 
-def find_phylum_reads(total, associated, agora, phylum, final_df=None):
-    # TODO: .lower() -> capitalisation
+def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylum, final_df=None):
+
+    phylum = phylum.lower()
+    phylum = phylum.capitalize()
+
     try:
-        total_phyl = total.loc[[phylum]]
-        phyl_associated = associated.loc[[phylum]]
-        phyl_associated_agora = agora.loc[[phylum]]
+        total_phylum_reads = total_reads_df.loc[[phylum]]
+        associated_phylum_reads = associated_reads_df.loc[[phylum]]
+        agora_phylum_reads = agora_reads_df.loc[[phylum]]
 
-        loss_ass = (total_phyl-phyl_associated)/total_phyl
-        loss_map = (phyl_associated-phyl_associated_agora)/total_phyl
+        reads_loss_due_assocation = (total_phylum_reads-associated_phylum_reads)/total_reads_df
+        reads_loss_due_mapping = (associated_phylum_reads-agora_phylum_reads)/total_phylum_reads
 
-        comb_df = pd.concat([total_phyl, phyl_associated, phyl_associated_agora, loss_ass, loss_map], axis=0)
+        combined_df = pd.concat([total_phylum_reads, associated_phylum_reads, agora_phylum_reads, reads_loss_due_assocation, reads_loss_due_mapping], axis=0)
 
-        comb_df = comb_df.transpose()
-        comb_df.columns = ['Total reads ' + phylum], ['Associated reads ' + phylum], \
+        combined_df = combined_df.transpose()
+        combined_df.columns = ['Total reads ' + phylum], ['Associated reads ' + phylum], \
                           ['Associated reads after agora ' + phylum], ['loss reads due to unassociation ' + phylum], \
                           ['loss reads due to agora2 mapping ' + phylum]
 
         if final_df is not None:
-            final_df = pd.merge(final_df, comb_df, left_index=True, right_index=True)
+            final_df = pd.merge(final_df, combined_df, left_index=True, right_index=True)
         else:
-            final_df = comb_df
+            final_df = combined_df
 
     except KeyError:
         print(f'You have misspelled {phylum} or it is not present, please check the spelling or remove')
@@ -134,25 +137,25 @@ def ratio_calc(final_df):
 
     # TODO: change to explicit names
 
-    bac_tot = final_df.iloc[:, 12]
-    firm_tot = final_df.iloc[:, 17]
+    bacter_total_reads = final_df.iloc[:, 12]
+    firmic_total_reads = final_df.iloc[:, 17]
 
-    bac_ass = final_df.iloc[:, 13]
-    firm_ass = final_df.iloc[:, 18]
+    bacter_associated_reads = final_df.iloc[:, 13]
+    firmic_associated_reads = final_df.iloc[:, 18]
 
-    bac_agora = final_df.iloc[:, 14]
-    firm_agora = final_df.iloc[:, 19]
+    bacter_agora_reads = final_df.iloc[:, 14]
+    firmic_agora_reads = final_df.iloc[:, 19]
 
-    total_ratio = firm_tot/bac_tot
+    total_ratio = firmic_total_reads/bacter_total_reads
     total_ratio = total_ratio.rename('Total Fir/Bac ratio')
 
-    ass_ratio = firm_ass/bac_ass
-    ass_ratio = ass_ratio.rename('Associated Fir/Bac ratio')
+    associated_ratio = firmic_associated_reads/bacter_associated_reads
+    associated_ratio = associated_ratio.rename('Associated Fir/Bac ratio')
 
-    agora_ratio = firm_agora/bac_agora
+    agora_ratio = firmic_agora_reads/bacter_agora_reads
     agora_ratio = agora_ratio.rename('Agora Fir/Bac ratio')
 
-    comb_ratio = pd.merge(total_ratio, ass_ratio, left_index=True, right_index=True)
+    comb_ratio = pd.merge(total_ratio, associated_ratio, left_index=True, right_index=True)
     comb_ratio = pd.merge(comb_ratio, agora_ratio, left_index=True, right_index=True)
 
     return comb_ratio
