@@ -221,7 +221,7 @@ def preprocessing(relative = False, **kwargs):
                 break
 
         if naming_convention:
-            df["Species"] = df["Genus"] + "_" + df["Species"]
+            df["Species"] = df["Genus"] + " " + df["Species"]
             df["Species"] = df["Species"].str.replace("(.*?)_(?!\S)", "", regex=True) #replace everything before and up to "_" if nothing after
 
         df["Index"] = tax.iloc[:, 0]
