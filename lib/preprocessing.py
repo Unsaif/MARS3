@@ -40,7 +40,8 @@ def preprocessing(relative = False, **kwargs):
         ' order', 
         ' sensu stricto',
         '\[', '\]', 
-        '\''
+        '\'',
+        ' CAG.*$'
     ]
 
     specific_alterations = {
