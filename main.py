@@ -107,14 +107,13 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "genus") 
 
     if path_to_stratification_file is not None:
-        stratification.split_df(species_stats, path_to_stratification_file)
-        stratification.split_df(genus_stats, path_to_stratification_file)
+        stratification.general_statistics_on_groups(species_stats, path_to_stratification_file)
+        stratification.general_statistics_on_groups(genus_stats, path_to_stratification_file)
 
     # return present_genus_df, present_species_df
 
 
 if __name__ == "__main__":
 
-    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt",
-                          path_to_stratification_file=r"C:\Users\THuls\Documents\python_projects\Test\files\Strat_file.xlsx")
+    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomy16s (1).tsv",
+                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\old16s.txt")
