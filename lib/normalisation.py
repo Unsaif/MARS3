@@ -1,5 +1,9 @@
 def normalise_and_cut(present_df, level):
 
+    present_df = present_df.set_index(present_df.index.str.replace(" ", "_", regex=True))
+    present_df = present_df.set_index('pan' + present_df.index.astype(str))
+    present_df = present_df.sort_index()
+
     total_reads = present_df.sum()
     agora_normed = present_df.loc[:].div(total_reads)
 

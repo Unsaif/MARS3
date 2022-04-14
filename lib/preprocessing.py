@@ -80,6 +80,7 @@ def preprocessing(relative = False, **kwargs):
     
     #homosynonym retrieval from api
     address = "https://marsagora2api.herokuapp.com/agora2/"
+    # i in hungatella hateway
     response_homosynonyms = requests.get(address + "homosynonyms")
     homosynonyms = response_homosynonyms.json()
     
