@@ -115,6 +115,5 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
 if __name__ == "__main__":
 
-    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt",
-                          path_to_stratification_file=r"C:\Users\THuls\Documents\python_projects\Test\files\Strat_file.xlsx")
+    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomy16s (1).tsv",
+                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\old16s.txt")
