@@ -1,20 +1,23 @@
 import pandas as pd
 
+
 def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
-    """ Takes the dataframe from general_overview and the user-defined path to the stratification file to run general
-       statistics on the different values in the general_overview dataframe. It saves the statistics dataframe as a .csv
-       at the end of the script
+    """ Takes information from all previously created dataframes and gives an overview of general values of the the data
+    These include: reads, coverages, loss of reads and specific phylum information
 
        Parameters
        ----------
        initial_df : pandas dataframe, required
-           dataframe from general_overview function
-       list_phylum_df: string, required
-           path to the stratification file
-       list_species_genus_dfs
-       extra_phyla
-
+           reads dataframe with no changes
+       list_phylum_df : list, required
+            list with variables containing various phylum-level information dataframes
+       list_species_genus_dfs : list, required
+            list with variables containting various genus/species - level information dataframes
+       level : string, required
+            species or genus, used as file name to distinguish files from each other
+       extra_phyla : list, optional | defaults to None
+            list with the names as strings of phyla other than bacteroidetes or firmicutes the user wants information on
        Returns
        -------
        None
@@ -24,7 +27,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
        Bram Nap - 04/2022
        """
 
-    # TODO: Add loss after cut and renorm for bac, firm, and ratio
+    # TODO: Add after cut and renorm for ratio
     total_phylum, associated_phylum, associated_agora_phylum = list_phylum_df
     reads_afteragora_df, reads_beforeagora_df, normalised_cutoff_df = list_species_genus_dfs
 
@@ -85,9 +88,9 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
 
     final_df = pd.merge(final_df, total_phylum_of_interest, left_index=True, right_index=True)
 
-    ratio_df = ratio_calc(final_df)
+    # ratio_df = ratio_calc(final_df)
 
-    final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
+    # final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
     final_df.to_csv(f'MARS_output/general_statistics_{level}.csv')
 
     return final_df
