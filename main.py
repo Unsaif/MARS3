@@ -91,8 +91,8 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
     # agora_sepecies_normed - just saved?
 
-    agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df)
-    agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df)
+    agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df, "species")
+    agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df, "genus")
 
     species_df_list = [present_species_df, species_df, agora_species_normed_cut]
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut]
