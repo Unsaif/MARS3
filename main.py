@@ -38,30 +38,50 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     df, kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df, strain_df = preprocessing.preprocessing(**kwargs, relative=relative)
 
     # Retrieve present species and genus df for later use
-    _, present_genus_df = agora_checking.agora_checking(genus_df, agora2_genera)
-    _, present_species_df = agora_checking.agora_checking(species_df, agora2_species)
+    absent_genus_df, present_genus_df = agora_checking.agora_checking(genus_df, agora2_genera)
+    absent_species_df, present_species_df = agora_checking.agora_checking(species_df, agora2_species)
+
+    # absent make up
+    def absent_make_up(df, total_df):
+        total=total_df.sum()
+        print(df.loc[:].div(total).sum(axis=1).div(len(df.columns)-1))
+        # print(total.sum())
+        # print(df.sum(axis=1).div(total.sum()))
+
+    absent_make_up(absent_species_df, species_df)
 
     levels = ['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species', 'Strain']
+
+    # arg sorting
+    taxonomic_levels = []
+    extra_phyla = []
+
+    lowered_levels = list(map(lambda x: x.lower(), levels))
+
+    for arg in args:
+        if arg.lower() in lowered_levels:
+            taxonomic_levels.append(arg.lower())
+        else:
+            extra_phyla.append(arg.lower())
 
     # TODO: expand saving capabilities
     if not os.path.isdir("MARS_output"):
         os.mkdir("MARS_output")
 
     # Save requested files
-    for arg in args:
+    for taxa in taxonomic_levels:
         try:
-            arg = arg.lower()
-            if arg == "class":
+            if taxa == "class":
                 _, _ = pipeline.pipeline(df, class_df, levels, "Class", agora2_classes, agora2_species, agora2_genera)
-            elif arg == "order":
+            elif taxa == "order":
                 _, _ = pipeline.pipeline(df, order_df, levels, "Order", agora2_orders, agora2_species, agora2_genera)
-            elif arg == "family":
+            elif taxa == "family":
                 _, _ = pipeline.pipeline(df, family_df, levels, "Family", agora2_families, agora2_species, agora2_genera)
-            elif arg == "strain":
+            elif taxa == "strain":
                 print("Strain pipeline still under construction...")
                 pass
             else:
-                print(f"\"{arg}\" did not match any of the optional taxonomic levels. Please check spelling")
+                print(f"\"{taxa}\" did not match any of the optional taxonomic levels. Please check spelling")
         except SyntaxError:
             print("A syntax error was found in your arguments. Please check that you inputted a string.")
             pass
@@ -90,6 +110,6 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
 if __name__ == "__main__":
 
-    genus, species = main(taxonomy_table=r"C:\Users\MSPG\Desktop\Mars_test\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\MSPG\Desktop\Mars_test\feature-tableWoLgenome.txt",
-                          path_to_stratification_file=r"C:\Users\MSPG\OneDrive - National University of Ireland, Galway (1)\MARS\Test_files\Strat_file.xlsx")
+    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
+                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt",
+                          path_to_stratification_file=r"C:\Users\THuls\Documents\python_projects\Test\files\Strat_file.xlsx")

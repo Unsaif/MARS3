@@ -26,7 +26,7 @@ def preprocessing(relative = False, **kwargs):
     -------
     Tim Hulshof
     """
-    
+    # CAG
     alterations = [
         'Candidatus_', 
         'Candidatus ',
