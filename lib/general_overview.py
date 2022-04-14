@@ -1,9 +1,33 @@
 import pandas as pd
 
-def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyla=None):
 
+def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyla=None):
+
+    """ Takes the dataframe from general_overview and the user-defined path to the stratification file to run general
+       statistics on the different values in the general_overview dataframe. It saves the statistics dataframe as a .csv
+       at the end of the script
+
+       Parameters
+       ----------
+       initial_df : pandas dataframe, required
+           dataframe from general_overview function
+       list_phylum_df: string, required
+           path to the stratification file
+       list_species_genus_dfs
+       extra_phyla
+
+       Returns
+       -------
+       None
+
+       Authors
+       -------
+       Bram Nap - 04/2022
+       """
+
+    # TODO: Add loss after cut and renorm for bac, firm, and ratio
     total_phylum, associated_phylum, associated_agora_phylum = list_phylum_df
-    reads_afteragora_df, reads_beforeagora_df, norm_cut_df = list_species_genus_dfs
+    reads_afteragora_df, reads_beforeagora_df, normalised_cutoff_df = list_species_genus_dfs
 
     sum_initial_df = sum_rename_sort(initial_df.iloc[:, 8:], 'Total Reads')
 
@@ -13,17 +37,17 @@ def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyl
     sum_associated_agora_reads = sum_rename_sort(associated_agora_phylum, 'AGORA2 associated reads')
     final_df = pd.merge(final_df, sum_associated_agora_reads, left_index=True, right_index=True)
 
-    reads_cov = sum_associated_reads/sum_initial_df
-    reads_cov = reads_cov.rename('% Reads that have species')
-    final_df = pd.merge(final_df, reads_cov, left_index=True, right_index=True)
+    associated_reads_coverage = sum_associated_reads/sum_initial_df
+    associated_reads_coverage = associated_reads_coverage.rename('% Reads that have species')
+    final_df = pd.merge(final_df, associated_reads_coverage, left_index=True, right_index=True)
 
-    reads_agora_cov = sum_associated_agora_reads / sum_initial_df
-    reads_agora_cov = reads_agora_cov.rename('% Agora2 total reads coverage')
-    final_df = pd.merge(final_df, reads_agora_cov, left_index=True, right_index=True)
+    agora_total_reads_coverage = sum_associated_agora_reads / sum_initial_df
+    agora_total_reads_coverage = agora_total_reads_coverage.rename('% Agora2 total reads coverage')
+    final_df = pd.merge(final_df, agora_total_reads_coverage, left_index=True, right_index=True)
 
-    reads_agora_ass_cov = sum_associated_agora_reads / sum_associated_reads
-    reads_agora_ass_cov = reads_agora_ass_cov.rename('% Agora2 associated reads coverage')
-    final_df = pd.merge(final_df, reads_agora_ass_cov, left_index=True, right_index=True)
+    agora_associated_reads_coverage = sum_associated_agora_reads / sum_associated_reads
+    agora_associated_reads_coverage = agora_associated_reads_coverage.rename('% Agora2 associated reads coverage')
+    final_df = pd.merge(final_df, agora_associated_reads_coverage, left_index=True, right_index=True)
 
     before_agora_taxa = reads_beforeagora_df[reads_beforeagora_df > 0].count()
     before_agora_taxa = before_agora_taxa.rename('# taxa before agora2 mapping')
@@ -33,34 +57,34 @@ def general_stats(initial_df, list_phylum_df, list_species_genus_dfs, extra_phyl
     after_agora_taxa = after_agora_taxa.rename('# taxa after agora2 mapping')
     final_df = pd.merge(final_df, after_agora_taxa, left_index=True, right_index=True)
 
-    after_agora_normcut_taxa = norm_cut_df[norm_cut_df > 0].count()
+    after_agora_normcut_taxa = normalised_cutoff_df[normalised_cutoff_df > 0].count()
     after_agora_normcut_taxa = after_agora_normcut_taxa.rename('# taxa after agora2 mapping and normalizing')
     final_df = pd.merge(final_df, after_agora_normcut_taxa, left_index=True, right_index=True)
 
-    loss_to_cutoff = sum_rename_sort(norm_cut_df, 'Sum of rel. abund. 1st norm')
+    loss_to_cutoff = sum_rename_sort(normalised_cutoff_df, 'Sum of rel. abund. 1st norm')
     final_df = pd.merge(final_df, loss_to_cutoff, left_index=True, right_index=True)
 
-    reads_agora_cut_cov = reads_agora_cov*loss_to_cutoff
-    reads_agora_cut_cov = reads_agora_cut_cov.rename('Coverage agora2 total reads after norm and cutoff')
-    final_df = pd.merge(final_df, reads_agora_cut_cov, left_index=True, right_index=True)
+    agora_cutoff_total_coverage = agora_total_reads_coverage*loss_to_cutoff
+    agora_cutoff_total_coverage = agora_cutoff_total_coverage.rename('Coverage agora2 total reads after norm and cutoff')
+    final_df = pd.merge(final_df, agora_cutoff_total_coverage, left_index=True, right_index=True)
 
-    reads_agora_cut_ass_cov = reads_agora_ass_cov*loss_to_cutoff
-    reads_agora_cut_ass_cov = reads_agora_cut_ass_cov.rename('Coverage agora2 associated reads after norm and cutoff')
-    final_df = pd.merge(final_df, reads_agora_cut_ass_cov, left_index=True, right_index=True)
+    agora_cutoff_associated_coverage = agora_associated_reads_coverage*loss_to_cutoff
+    agora_cutoff_associated_coverage = agora_cutoff_associated_coverage.rename('Coverage agora2 associated reads after norm and cutoff')
+    final_df = pd.merge(final_df, agora_cutoff_associated_coverage, left_index=True, right_index=True)
 
-    total_phylum_oi = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum, 'Bacteroidetes')
+    total_phylum_of_interest = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum, 'Bacteroidetes')
 
-    total_phylum_oi = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum, 'Firmicutes',
-                                        total_phylum_oi)
+    total_phylum_of_interest = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum, 'Firmicutes',
+                                                 total_phylum_of_interest)
 
     if extra_phyla is not None:
         for phyl in extra_phyla:
-            total_phylum_oi = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum,
-                                                total_phylum_oi, phyl)
+            total_phylum_of_interest = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum,
+                                                total_phylum_of_interest, phyl)
     else:
         pass
 
-    final_df = pd.merge(final_df, total_phylum_oi, left_index=True, right_index=True)
+    final_df = pd.merge(final_df, total_phylum_of_interest, left_index=True, right_index=True)
 
     ratio_df = ratio_calc(final_df)
 
