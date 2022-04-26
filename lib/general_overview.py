@@ -1,6 +1,6 @@
 import pandas as pd
 import warnings
-
+import numpy as np
 
 def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
@@ -168,32 +168,45 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
           """
 
     # Make sure that format of the phylum name will correspond to the phyla names in the dataframe
+    
     phylum = phylum.lower()
     phylum = phylum.capitalize()
-
+    
     # A try statement to catch misspelled or non-existent phyla names
     try:
         # Obtain relevant data from the respective dataframes
-        total_phylum_reads = total_reads_df.loc[[phylum]]
-        associated_phylum_reads = associated_reads_df.loc[[phylum]]
-        agora_phylum_reads = agora_reads_df.loc[[phylum]]
+        
+        total_phylum_reads = total_reads_df.loc[phylum]
+        associated_phylum_reads = associated_reads_df.loc[phylum]
+        agora_phylum_reads = agora_reads_df.loc[phylum]
 
         # Calculate the fractions lost due to no association and agora2 mapping
         reads_loss_due_assocation = (total_phylum_reads-associated_phylum_reads)/total_reads_df
         reads_loss_due_mapping = (associated_phylum_reads-agora_phylum_reads)/total_phylum_reads
 
         # Combine different Series into one dataframe
-        combined_df = pd.concat([total_phylum_reads, associated_phylum_reads, agora_phylum_reads, reads_loss_due_assocation, reads_loss_due_mapping], axis=0)
-        # ### Added to deal with 16s issue
-        combined_df = combined_df.dropna() 
-        # ###
+        # combined_df = pd.concat([total_phylum_reads, associated_phylum_reads, agora_phylum_reads, reads_loss_due_assocation.loc[phylum].T, reads_loss_due_mapping], axis=1)
 
-        # Transpose the dataframe for readability
-        combined_df = combined_df.transpose()
-        # Add column names
-        combined_df.columns = ['Total reads ' + phylum], ['Associated reads ' + phylum], \
-                          ['Associated reads after agora ' + phylum], ['loss reads due to unassociation ' + phylum], \
-                          ['loss reads due to agora2 mapping ' + phylum]
+        frame = { 
+            f'Total reads {phylum}': total_phylum_reads, 
+            f'Associated reads {phylum}': associated_phylum_reads,
+            f'Associated reads after agora {phylum}': agora_phylum_reads,
+            f'loss reads due to unassociation {phylum}': reads_loss_due_assocation.loc[phylum].T,
+            f'loss reads due to agora2 mapping {phylum}': reads_loss_due_mapping
+            }
+
+        combined_df = pd.DataFrame(frame)
+        # # ### Added to deal with 16s issue
+
+        # combined_df = combined_df.dropna() 
+        # # ###
+
+        # # Transpose the dataframe for readability
+        # combined_df = combined_df.transpose()
+        # # Add column names
+        # combined_df.columns = ['Total reads ' + phylum], ['Associated reads ' + phylum], \
+        #                     ['Associated reads after agora ' + phylum], ['loss reads due to unassociation ' + phylum], \
+        #                     ['loss reads due to agora2 mapping ' + phylum]
 
         # If there is final_df input, combine the two dataframes
         if final_df is not None:
@@ -204,7 +217,7 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
             final_df = combined_df
 
     # If there is no exact match in the dataframe raise a warning
-    except KeyError:
+    except KeyError as err:
         warnings.warn(f'You have misspelled {phylum} or it is not present, please check the spelling or remove')
 
     return final_df
