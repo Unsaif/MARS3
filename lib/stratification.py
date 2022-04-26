@@ -3,7 +3,7 @@ import scipy.stats as stats
 
 
 # TODO: change general_info_df to maybe the new name of general_stats ? CHANGE TO GENERAL OVERVIEW
-def general_statistics_on_groups(general_info_df, path_to_stratification_file):
+def general_statistics_on_groups(general_info_df, path_to_stratification_file, level):
 
     """ Takes the dataframe from general_overview and the user-defined path to the stratification file to run general
     statistics on the different values in the general_overview dataframe. It saves the statistics dataframe as a .csv
@@ -138,4 +138,4 @@ def general_statistics_on_groups(general_info_df, path_to_stratification_file):
     cols = [cols[-1]] + cols[:-1]
     stat_df = statistics_df[cols]
 
-    # TODO:Save file here
+    stat_df.to_csv(f'MARS_output/general_statistics_{level}.csv')
