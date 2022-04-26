@@ -1,6 +1,7 @@
 import pandas as pd
 import warnings
 
+
 def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
     """ Takes information from all previously created dataframes and gives an overview of general values of the the data
@@ -99,11 +100,11 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     final_df = pd.merge(final_df, total_phylum_of_interest, left_index=True, right_index=True)
 
     # Calculate the fir/bac ratio for each sample and add it to the final_df variable
-    # ratio_df = ratio_calc(final_df)
-    # final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
+    ratio_df = ratio_calc(final_df)
+    final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
 
     # Save the final_df variable as a .csv file
-    final_df.to_csv(f'MARS_output/general_statistics_{level}.csv')
+    final_df.to_csv(f'MARS_output/general_overview_{level}.csv')
 
     return final_df
 
