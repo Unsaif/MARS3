@@ -44,7 +44,7 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     # absent make up
     def absent_make_up(df, total_df):
         total=total_df.sum()
-        print(df.loc[:].div(total).sum(axis=1).div(len(df.columns)-1))
+        # (df.loc[:].div(total).sum(axis=1).div(len(df.columns)-1))
         # print(total.sum())
         # print(df.sum(axis=1).div(total.sum()))
 

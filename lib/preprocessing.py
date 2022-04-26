@@ -225,8 +225,6 @@ def preprocessing(relative = False, **kwargs):
             df["Species"] = df["Genus"] + " " + df["Species"]
             df["Species"] = df["Species"].str.replace("(.*?) (?!\S)", "", regex=True) #replace everything before and up to "_" if nothing after
 
-        print(df["Species"])
-        print(df["Genus"])
         df["Index"] = tax.iloc[:, 0]
         df = df.set_index("Index")
         df = df.merge(feat, left_index=True, right_index=True, how='inner')
