@@ -99,11 +99,11 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df, "species")
     agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df, "genus")
 
-    x = panname_2_phylum.panname_2_phylum(df, agora_species_normed_cut, 'Species')
-    y = panname_2_phylum.panname_2_phylum(df, agora_genus_normed_cut, 'Genus')
+    pan_phylum_species = panname_2_phylum.panname_2_phylum(df, agora_species_normed_cut, 'Species')
+    pan_phylum_genus = panname_2_phylum.panname_2_phylum(df, agora_genus_normed_cut, 'Genus')
 
-    species_df_list = [present_species_df, species_df, agora_species_normed_cut]
-    genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut]
+    species_df_list = [present_species_df, species_df, agora_species_normed_cut, pan_phylum_species]
+    genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut,pan_phylum_genus]
 
     # Get stats
     species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "species")

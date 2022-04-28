@@ -2,6 +2,7 @@ import pandas as pd
 import warnings
 import numpy as np
 
+
 def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, extra_phyla=None):
 
     """ Takes information from all previously created dataframes and gives an overview of general values of the the data
@@ -31,7 +32,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     # TODO: Add after cut and renorm for ratio
     # Unpack the lists
     total_phylum, associated_phylum, associated_agora_phylum = list_phylum_df
-    reads_afteragora_df, reads_beforeagora_df, normalised_cutoff_df = list_species_genus_dfs
+    reads_afteragora_df, reads_beforeagora_df, normalised_cutoff_df, pan_phylum_df = list_species_genus_dfs
 
     # Calculate the sum of reads for each sample of respective dfs and add join them
     sum_initial_df = sum_rename_sort(initial_df.iloc[:, 8:], 'Total Reads')
@@ -92,7 +93,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     if extra_phyla is not None:
         for phyl in extra_phyla:
             total_phylum_of_interest = find_phylum_reads(total_phylum, associated_phylum, associated_agora_phylum,
-                                                total_phylum_of_interest, phyl)
+                                                         total_phylum_of_interest, phyl)
     else:
         pass
 
@@ -102,6 +103,10 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     # Calculate the fir/bac ratio for each sample and add it to the final_df variable
     ratio_df = ratio_calc(final_df)
     final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
+
+    final_ratio = pan_phylum_df.loc['Firmicutes']/pan_phylum_df.loc['Bacteroidetes']
+    final_ratio = final_ratio.rename('Firm/Bac ratio after cutoff and renorm')
+    final_df = pd.merge(final_df, final_ratio, left_index=True, right_index=True)
 
     # Save the final_df variable as a .csv file
     final_df.to_csv(f'MARS_output/general_overview_{level}.csv')
