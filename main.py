@@ -44,11 +44,13 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     # absent make up
     def absent_make_up(df, total_df):
         total=total_df.sum()
-        # (df.loc[:].div(total).sum(axis=1).div(len(df.columns)-1))
+        df["loss"] = df.loc[:].div(total).sum(axis=1).div(len(df.columns)-1)
+        return df
         # print(total.sum())
         # print(df.sum(axis=1).div(total.sum()))
 
-    absent_make_up(absent_species_df, species_df)
+    absent_species_df = absent_make_up(absent_species_df, species_df)
+    absent_genus_df = absent_make_up(absent_genus_df, genus_df)
 
     levels = ['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species', 'Strain']
 
@@ -118,5 +120,5 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
 if __name__ == "__main__":
 
-    main(taxonomy_table=r"C:\Users\MSPG\Desktop\Mars_test\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\MSPG\Desktop\Mars_test\feature-tableWoLgenome.txt")
+    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
+                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt")
