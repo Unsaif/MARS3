@@ -30,6 +30,8 @@ def normalise_and_cut(present_df, level):
     agora_normed_cut = agora_normed.copy()
     agora_normed_cut[agora_normed_cut < 1e-5] = 0
 
+    agora_normed_cut = agora_normed_cut.loc[(agora_normed_cut.sum(axis=1) != 0), (agora_normed_cut.sum(axis=0) != 0)]
+
     # Renormalize
     total_rel_abund = agora_normed_cut.sum()
     agora_renormed = agora_normed_cut.loc[:].div(total_rel_abund)
