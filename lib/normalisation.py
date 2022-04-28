@@ -36,6 +36,11 @@ def normalise_and_cut(present_df, level):
     total_rel_abund = agora_normed_cut.sum()
     agora_renormed = agora_normed_cut.loc[:].div(total_rel_abund)
 
+    agora_renormed.index = agora_renormed.index.str.replace(".", "", regex=True)
+    agora_renormed.index = agora_renormed.index.str.replace("-", "_", regex=True)
+    agora_renormed.index = agora_renormed.index.str.replace("(", "_", regex=True)
+    agora_renormed.index = agora_renormed.index.str.replace(")", "_", regex=True)
+    agora_renormed.index = agora_renormed.index.str.replace("/", "_", regex=True)
     # Save
     agora_normed.to_csv(f'MARS_output/agora_normed_{level}.csv')
     agora_normed_cut.to_csv(f'MARS_output/agora_normed_cut_{level}.csv')
