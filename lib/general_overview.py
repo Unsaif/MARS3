@@ -96,7 +96,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     else:
         pass
 
-    # add phylum information datagrame to the final_df variable
+    # add phylum information dataframe to the final_df variable
     final_df = pd.merge(final_df, total_phylum_of_interest, left_index=True, right_index=True)
 
     # Calculate the fir/bac ratio for each sample and add it to the final_df variable

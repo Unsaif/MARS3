@@ -1,4 +1,4 @@
-from lib import preprocessing, agora_checking, pipeline, general_overview, stratification, normalisation
+from lib import preprocessing, agora_checking, pipeline, general_overview, stratification, normalisation, panname_2_phylum
 import os
 import json
 
@@ -99,6 +99,9 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df, "species")
     agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df, "genus")
 
+    x = panname_2_phylum.panname_2_phylum(df, agora_species_normed_cut, 'Species')
+    y = panname_2_phylum.panname_2_phylum(df, agora_genus_normed_cut, 'Genus')
+
     species_df_list = [present_species_df, species_df, agora_species_normed_cut]
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut]
 
@@ -115,5 +118,5 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
 if __name__ == "__main__":
 
-    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt")
+    main(taxonomy_table=r"C:\Users\MSPG\Desktop\Mars_test\taxonomyWoL.tsv",
+                          feature_table=r"C:\Users\MSPG\Desktop\Mars_test\feature-tableWoLgenome.txt")
