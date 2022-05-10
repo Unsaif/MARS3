@@ -118,7 +118,7 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     # return present_genus_df, present_species_df
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
-                          feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-tableWoLgenome.txt")
+#     main(taxonomy_table=r"C:\Users\THuls\Documents\python_projects\Test\files\taxonomyWoL.tsv",
+#                           feature_table=r"C:\Users\THuls\Documents\python_projects\Test\files\feature-table.txt")

@@ -104,7 +104,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     ratio_df = ratio_calc(final_df)
     final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
 
-    # Calculate the fir/bac ratio after mapping, cutoff and renormalisation
+    # Calculate the fir/bac ratio after mapping, cutoff and renormalisatio
     final_ratio = pan_phylum_df.loc['Firmicutes']/pan_phylum_df.loc['Bacteroidetes']
     final_ratio = final_ratio.rename('Firm/Bac ratio after cutoff and renorm')
     final_df = pd.merge(final_df, final_ratio, left_index=True, right_index=True)
@@ -181,11 +181,10 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
     # A try statement to catch misspelled or non-existent phyla names
     try:
         # Obtain relevant data from the respective dataframes
-        
         total_phylum_reads = total_reads_df.loc[phylum]
         associated_phylum_reads = associated_reads_df.loc[phylum]
         agora_phylum_reads = agora_reads_df.loc[phylum]
-
+        
         # Calculate the fractions lost due to no association and agora2 mapping
         reads_loss_due_assocation = (total_phylum_reads-associated_phylum_reads)/total_reads_df
         reads_loss_due_mapping = (associated_phylum_reads-agora_phylum_reads)/total_phylum_reads
@@ -210,7 +209,7 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
             final_df = combined_df
 
     # If there is no exact match in the dataframe raise a warning
-    except KeyError as err:
+    except KeyError:
         warnings.warn(f'You have misspelled {phylum} or it is not present, please check the spelling or remove')
 
     return final_df

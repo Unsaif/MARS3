@@ -224,6 +224,8 @@ def preprocessing(relative = False, **kwargs):
         if naming_convention:
             df["Species"] = df["Genus"] + " " + df["Species"]
             df["Species"] = df["Species"].str.replace("(.*?) (?!\S)", "", regex=True) #replace everything before and up to "_" if nothing after
+        else:
+            df["Species"] = df["Species"].str.replace("_", " ", regex=True)
 
         df["Index"] = tax.iloc[:, 0]
         df = df.set_index("Index")
@@ -243,5 +245,9 @@ def preprocessing(relative = False, **kwargs):
     genus_df = get_grouped_tax_level("Genus", df)
     species_df = get_grouped_tax_level("Species", df)
     strain_df = get_grouped_tax_level("Strain", df)
+
+    # Change potential Bacteroidota to Bacteroidetes
+    phylum_df = phylum_df.rename(index={'Bacteroidota': 'Bacteroidetes'})
+    df["Phylum"] = df["Phylum"].replace({'Bacteroidota': 'Bacteroidetes'})
 
     return df, kingdom_df, phylum_df, class_df, order_df, family_df, genus_df, species_df, strain_df
