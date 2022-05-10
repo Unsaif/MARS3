@@ -2,3 +2,4 @@ test.py
 test.csv
 MARS_output/
 venv/
+call_mars.py

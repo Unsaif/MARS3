@@ -104,6 +104,7 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     ratio_df = ratio_calc(final_df)
     final_df = pd.merge(final_df, ratio_df, left_index=True, right_index=True)
 
+    # Calculate the fir/bac ratio after mapping, cutoff and renormalisation
     final_ratio = pan_phylum_df.loc['Firmicutes']/pan_phylum_df.loc['Bacteroidetes']
     final_ratio = final_ratio.rename('Firm/Bac ratio after cutoff and renorm')
     final_df = pd.merge(final_df, final_ratio, left_index=True, right_index=True)
