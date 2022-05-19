@@ -30,16 +30,14 @@ def general_statistics_on_groups(general_info_df, path_to_stratification_file, l
     if path_to_stratification_file.endswith('.xlsx'):
         stratification_df = pd.read_excel(path_to_stratification_file, index_col=0)
     else:
-        stratification_df = pd.read_csv(path_to_stratification_file)
+        stratification_df = pd.read_csv(path_to_stratification_file, index_col=0)
     # Set the index of the df to strings, required for merging with the general_overview df
-    stratification_df.index = stratification_df.index.astype(str)
 
+    stratification_df.index = stratification_df.index.astype(str)
     # Combine the general_overview_df and the stratification_df
     combined_df = pd.merge(general_info_df, stratification_df, left_index=True, right_index=True)
-
     # Find all the unique groups in the stratification column
     groups = combined_df.iloc[:, -1].unique()
-
     # Needed to make sure the first df merge is carried out
     first_iteration = 1
     # Required as placeholder
@@ -69,7 +67,6 @@ def general_statistics_on_groups(general_info_df, path_to_stratification_file, l
             # Merge averages then standard deviations of subsequent groups the the statistics df
             statistics_df = pd.merge(statistics_df, avg, left_index=True, right_index=True)
             statistics_df = pd.merge(statistics_df, std, left_index=True, right_index=True)
-
     # BASIC STATISTICS
 
     # Initialise a list to store values in
