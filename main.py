@@ -1,4 +1,4 @@
-from lib import preprocessing, agora_checking, pipeline, general_overview, stratification, normalisation, panname_2_phylum
+from lib import preprocessing, agora_checking, pipeline, general_overview, stratification, normalisation, panname_2_phylum, visuals
 import os
 import json
 
@@ -21,6 +21,7 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     """
 
     # TODO: sort args into taxonomic levels and phyla
+    # TODO: Add sanity checker -> e.g., create a txt file with sample names that exhibit strange values and the user should take a closer look at.
 
     # Read in Agora2 unique taxa on all taxonomic levels
     with open('mars.json', 'r') as fp:
@@ -69,11 +70,15 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     # TODO: expand saving capabilities
     if not os.path.isdir("MARS_output"):
         os.mkdir("MARS_output")
+        os.mkdir('MARS_output/Figs')
+        os.mkdir('MARS_output/Species')
+        os.mkdir('MARS_output/Genus')
+        os.mkdir('MARS_output/Phylum')
 
-    absent_species_df.to_csv("MARS_output/absent_species.csv")
-    present_species_df.to_csv("MARS_output/present_species.csv")
-    absent_genus_df.to_csv("MARS_output/absent_genus.csv")
-    present_genus_df.to_csv("MARS_output/present_genus.csv")
+    absent_species_df.to_csv("MARS_output/Species/absent_species.csv")
+    present_species_df.to_csv("MARS_output/Species/present_species.csv")
+    absent_genus_df.to_csv("MARS_output/Genus/absent_genus.csv")
+    present_genus_df.to_csv("MARS_output/Genus/present_genus.csv")
 
     # Save requested files
     for taxa in taxonomic_levels:
@@ -98,8 +103,8 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
 
     # agora_sepecies_normed - just saved?
 
-    agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df, "species")
-    agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df, "genus")
+    agora_species_normed_cut = normalisation.normalise_and_cut(present_species_df, "Species")
+    agora_genus_normed_cut = normalisation.normalise_and_cut(present_genus_df, "Genus")
 
     pan_phylum_species = panname_2_phylum.panname_2_phylum(df, agora_species_normed_cut, 'Species')
     pan_phylum_genus = panname_2_phylum.panname_2_phylum(df, agora_genus_normed_cut, 'Genus')
@@ -108,13 +113,14 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut,pan_phylum_genus]
 
     # Get stats
-    species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "species")
-    genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "genus") 
+    species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "Species")
+    genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "Genus")
 
     if path_to_stratification_file is not None:
-        stratification.general_statistics_on_groups(species_stats, path_to_stratification_file, 'species')
-        stratification.general_statistics_on_groups(genus_stats, path_to_stratification_file, 'genus')
+        stratification.general_statistics_on_groups(species_stats, path_to_stratification_file, 'Species')
+        stratification.general_statistics_on_groups(genus_stats, path_to_stratification_file, 'Genus')
 
+    visuals.visualise(species_stats, 'Species')
     # return present_genus_df, present_species_df
 
 

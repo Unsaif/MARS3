@@ -79,10 +79,10 @@ def preprocessing(relative = False, **kwargs):
     levels = ['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species', 'Strain'] 
     
     #homosynonym retrieval from api
-    address = "https://marsagora2api.herokuapp.com/agora2/"
+    # address = "https://marsagora2api.herokuapp.com/agora2/"
     # i in hungatella hateway
-    response_homosynonyms = requests.get(address + "homosynonyms")
-    homosynonyms = response_homosynonyms.json()
+    # response_homosynonyms = requests.get(address + "homosynonyms")
+    # homosynonyms = response_homosynonyms.json()
     
     def pad_or_truncate(some_list, target_len):
         return some_list[:target_len] + [""]*(target_len - len(some_list))
@@ -234,7 +234,7 @@ def preprocessing(relative = False, **kwargs):
         
     ##currently not adjusting on genus level -- rational: we do not always know if genus part of species name is true genus name    
     df = df.set_index("Species") 
-    df = df.rename(index=homosynonyms) #homosynonym rename on species level
+    # df = df.rename(index=homosynonyms) #homosynonym rename on species level
     df = df.reset_index()
 
     kingdom_df = get_grouped_tax_level("Kingdom", df)

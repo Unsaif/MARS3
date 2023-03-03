@@ -44,8 +44,8 @@ def normalise_and_cut(present_df, level):
     agora_renormed.index = agora_renormed.index.str.replace("/", "_", regex=True)
 
     # Save
-    agora_normed.to_csv(f'MARS_output/agora_normed_{level}.csv')
-    agora_normed_cut.to_csv(f'MARS_output/agora_normed_cut_{level}.csv')
-    agora_renormed.to_csv(f'MARS_output/agora_renormed_cut_{level}.csv')
+    agora_normed.to_csv(f'MARS_output/{level}/agora_normed_{level}.csv')
+    agora_normed_cut.to_csv(f'MARS_output/{level}/agora_normed_cut_{level}.csv')
+    agora_renormed.to_csv(f'MARS_output/{level}/agora_renormed_cut_{level}.csv')
 
     return agora_normed_cut

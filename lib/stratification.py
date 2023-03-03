@@ -136,3 +136,5 @@ def general_statistics_on_groups(general_info_df, path_to_stratification_file, l
     stat_df = statistics_df[cols]
 
     stat_df.to_csv(f'MARS_output/general_statistics_{level}.csv')
+
+    return stat_df, stratification_df

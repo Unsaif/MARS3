@@ -12,13 +12,13 @@ def pipeline(df, total_df, levels, level, agora2_level_set, agora2_species, agor
     _, associated_genus_agora2 = species_genus_association.association(total_df_genera_in_agora, levels, level)
 
     #save these files
-    total_df.to_csv(f'MARS_output/total_{level}.csv')
-    associated_species.to_csv(f'MARS_output/associated_species_{level}.csv')
-    associated_genus.to_csv(f'MARS_output/associated_genus_{level}.csv')
-    absent.to_csv(f'MARS_output/absent_{level}.csv')
-    present.to_csv(f'MARS_output/present_{level}.csv')
-    associated_species_agora2.to_csv(f'MARS_output/associated_species_agora2_{level}.csv')
-    associated_genus_agora2.to_csv(f'MARS_output/associated_genus_agora2_{level}.csv')
+    total_df.to_csv(f'MARS_output//{level}/total_{level}.csv')
+    associated_species.to_csv(f'MARS_output/{level}/associated_species_{level}.csv')
+    associated_genus.to_csv(f'MARS_output/{level}/associated_genus_{level}.csv')
+    absent.to_csv(f'MARS_output/{level}/absent_{level}.csv')
+    present.to_csv(f'MARS_output/{level}/present_{level}.csv')
+    associated_species_agora2.to_csv(f'MARS_output/{level}/associated_species_agora2_{level}.csv')
+    associated_genus_agora2.to_csv(f'MARS_output/{level}/associated_genus_agora2_{level}.csv')
 
     species_phylum_list = [total_df, associated_species, associated_species_agora2]
     genus_phylum_list = [total_df, associated_genus, associated_genus_agora2]
