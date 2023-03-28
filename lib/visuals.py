@@ -15,12 +15,12 @@ def visualise(overview, level, stats=None):
     plt.savefig('MARS_output/Figs/TotalReadsBoxplot.png')
 
     plt.subplot(1, 2, 1)
-    plt.boxplot(overview.loc[:, 'percentage' + level + 'Reads'])
+    plt.boxplot(overview.loc[:, level + 'ReadsFr'])
     plt.title(f'Fraction {level}-level reads')
     plt.xticks([1], ['all data'])
 
     plt.subplot(1, 2, 2)
-    plt.boxplot(overview.loc[:, 'percentageAgoraTotalReads'])
+    plt.boxplot(overview.loc[:, 'AGORATotalReadsFr'])
     plt.title(f'Fraction {level}-level \n AGORA2 reads')
     plt.xticks([1], ['all data'])
     plt.savefig('MARS_output/Figs/coverageBoxPlots.png')
@@ -44,7 +44,7 @@ def visualise(overview, level, stats=None):
     plt.xticks([1], ['all data'])
 
     plt.subplot(2, 2, 4)
-    plt.boxplot(overview.loc[:, 'FBRatioAfterCutOff'])
+    plt.boxplot(overview.loc[:, 'FBRatioAfterCutOffRenorm'])
     plt.title('After Cut-Off')
     plt.xticks([1], ['all data'])
 

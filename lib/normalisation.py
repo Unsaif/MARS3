@@ -48,4 +48,4 @@ def normalise_and_cut(present_df, level):
     agora_normed_cut.to_csv(f'MARS_output/{level}/agora_normed_cut_{level}.csv')
     agora_renormed.to_csv(f'MARS_output/{level}/agora_renormed_cut_{level}.csv')
 
-    return agora_normed_cut
+    return agora_normed_cut, agora_renormed
