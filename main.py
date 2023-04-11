@@ -113,14 +113,14 @@ def main(*args, relative=False, path_to_stratification_file=None, **kwargs):
     genus_df_list = [present_genus_df, genus_df, agora_genus_normed_cut,pan_phylum_genus]
 
     # Get stats
-    species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "Species")
-    genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "Genus")
+    species_stats = general_overview.general_overview(df, species_phylum_list, species_df_list, "Sp")
+    genus_stats = general_overview.general_overview(df, genus_phylum_list, genus_df_list, "Ge")
 
     if path_to_stratification_file is not None:
-        stratification.general_statistics_on_groups(species_stats, path_to_stratification_file, 'Species')
-        stratification.general_statistics_on_groups(genus_stats, path_to_stratification_file, 'Genus')
+        stratification.general_statistics_on_groups(species_stats, path_to_stratification_file, 'Sp')
+        stratification.general_statistics_on_groups(genus_stats, path_to_stratification_file, 'Ge')
 
-    visuals.visualise(species_stats, 'Species')
+    visuals.visualise(species_stats, 'Sp')
     # return present_genus_df, present_species_df
 
 

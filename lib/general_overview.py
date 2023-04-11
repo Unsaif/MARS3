@@ -34,51 +34,51 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
     reads_afteragora_df, reads_beforeagora_df, normalised_cutoff_df, pan_phylum_df = list_species_genus_dfs
 
     # Calculate the sum of reads for each sample of respective dfs and add join them
-    sum_initial_df = sum_rename_sort(initial_df.iloc[:, 8:], 'totalReads')
+    sum_initial_df = sum_rename_sort(initial_df.iloc[:, 8:], 'tot_Reads')
 
-    sum_associated_reads = sum_rename_sort(associated_phylum, level + 'Reads')
+    sum_associated_reads = sum_rename_sort(associated_phylum, level + '_Reads')
     final_df = pd.merge(sum_initial_df, sum_associated_reads, left_index=True, right_index=True)
 
-    sum_associated_agora_reads = sum_rename_sort(associated_agora_phylum, 'AGORAReads')
+    sum_associated_agora_reads = sum_rename_sort(associated_agora_phylum, 'AGORA2_' + level + '_Reads')
     final_df = pd.merge(final_df, sum_associated_agora_reads, left_index=True, right_index=True)
 
     # Calculate the coverages for each sample and add to the final_df variable
     associated_reads_coverage = sum_associated_reads / sum_initial_df
-    associated_reads_coverage = associated_reads_coverage.rename(level + 'ReadsFr')
+    associated_reads_coverage = associated_reads_coverage.rename(level + '_Reads_FracTot')
     final_df = pd.merge(final_df, associated_reads_coverage, left_index=True, right_index=True)
 
     agora_total_reads_coverage = sum_associated_agora_reads / sum_initial_df
-    agora_total_reads_coverage = agora_total_reads_coverage.rename('AGORATotalReadsFr')
+    agora_total_reads_coverage = agora_total_reads_coverage.rename('AGORA2_'+level+'_Reads_FracTot')
     final_df = pd.merge(final_df, agora_total_reads_coverage, left_index=True, right_index=True)
 
     agora_associated_reads_coverage = sum_associated_agora_reads / sum_associated_reads
-    agora_associated_reads_coverage = agora_associated_reads_coverage.rename('AGORA' + level + 'ReadsFr')
+    agora_associated_reads_coverage = agora_associated_reads_coverage.rename('AGORA2_' + level + '_Reads_Frac'+level)
     final_df = pd.merge(final_df, agora_associated_reads_coverage, left_index=True, right_index=True)
 
     # Obtain the amount of the species / genera that have, at least, 1 read for each sample and add to final_df variable
     before_agora_taxa = reads_beforeagora_df[reads_beforeagora_df > 0].count()
-    before_agora_taxa = before_agora_taxa.rename('number' + level + 'BeforeAgora')
+    before_agora_taxa = before_agora_taxa.rename('Tot_'+level)
     final_df = pd.merge(final_df, before_agora_taxa, left_index=True, right_index=True)
 
     after_agora_taxa = reads_afteragora_df[reads_afteragora_df > 0].count()
-    after_agora_taxa = after_agora_taxa.rename('number' + level + 'AfterAgora')
+    after_agora_taxa = after_agora_taxa.rename('ABORA2_' + level)
     final_df = pd.merge(final_df, after_agora_taxa, left_index=True, right_index=True)
 
     after_agora_normcut_taxa = normalised_cutoff_df[normalised_cutoff_df > 0].count()
-    after_agora_normcut_taxa = after_agora_normcut_taxa.rename('number' + level + 'AfterCutOff')
+    after_agora_normcut_taxa = after_agora_normcut_taxa.rename('AGORA2_Cutoff_'+level)
     final_df = pd.merge(final_df, after_agora_normcut_taxa, left_index=True, right_index=True)
 
     # Calculate the total rel. abundance for each sample after cutoff and add to final_df variable
-    loss_to_cutoff = sum_rename_sort(normalised_cutoff_df, 'relAbundAfterCutOff')
+    loss_to_cutoff = sum_rename_sort(normalised_cutoff_df, 'AGORA2_Cutoff_RelAb')
     final_df = pd.merge(final_df, loss_to_cutoff, left_index=True, right_index=True)
 
     # Calculate the effect of cutoff on coverages and add to final_df variable
     agora_cutoff_total_coverage = agora_total_reads_coverage*loss_to_cutoff
-    agora_cutoff_total_coverage = agora_cutoff_total_coverage.rename('AGORATotalReadsAfterCutOffFr')
+    agora_cutoff_total_coverage = agora_cutoff_total_coverage.rename('AGORA2_Cutoff_'+level+'Reads_FracTot')
     final_df = pd.merge(final_df, agora_cutoff_total_coverage, left_index=True, right_index=True)
 
     agora_cutoff_associated_coverage = agora_associated_reads_coverage*loss_to_cutoff
-    agora_cutoff_associated_coverage = agora_cutoff_associated_coverage.rename('AGORA' + level + 'AfterCutOffFr')
+    agora_cutoff_associated_coverage = agora_cutoff_associated_coverage.rename('AGORA2_Cutoff_'+level+'Reads_Frac'+level)
     final_df = pd.merge(final_df, agora_cutoff_associated_coverage, left_index=True, right_index=True)
 
     # Total amount of reads for the phylum of bacteroidetes for each sample in different dataframes
@@ -105,11 +105,15 @@ def general_overview(initial_df, list_phylum_df, list_species_genus_dfs, level, 
 
     # Calculate the fir/bac ratio after mapping, cutoff and renormalisation
     final_ratio = pan_phylum_df.loc['Firmicutes']/pan_phylum_df.loc['Bacteroidetes']
-    final_ratio = final_ratio.rename('FBRatioAfterCutOffRenorm')
+    final_ratio = final_ratio.rename('FB_Ratio_AGORA2_Cutoff')
     final_df = pd.merge(final_df, final_ratio, left_index=True, right_index=True)
 
     # Save the final_df variable as a .csv file
-    final_df.to_csv(f'MARS_output/{level}/general_overview_{level}.csv')
+    if level == 'Sp':
+        fol = 'Species'
+    elif level == 'Ge':
+        fol = 'Genus'
+    final_df.to_csv(f'MARS_output/{fol}/general_overview_{fol}.csv')
 
     return final_df
 
@@ -190,11 +194,11 @@ def find_phylum_reads(total_reads_df, associated_reads_df, agora_reads_df, phylu
 
         # Combine different Series into one dataframe
         frame = { 
-            f'totalReads{phylum}': total_phylum_reads,
-            f'{level}Reads{phylum}': associated_phylum_reads,
-            f'{level}ReadsAGORA{phylum}': agora_phylum_reads,
-            f'{phylum}ReadsLostNo{level}AssociationFr': reads_loss_due_assocation.loc[phylum].T,
-            f'{phylum}ReadsLostAGORAMapping': reads_loss_due_mapping
+            f'{phylum}_Tot_Reads': total_phylum_reads,
+            f'{phylum}_{level}_Reads': associated_phylum_reads,
+            f'{phylum}_AGORA2_{level}_Reads': agora_phylum_reads,
+            f'{phylum}_Reads_no{level}': reads_loss_due_assocation.loc[phylum].T,
+            f'{phylum}_{level}_Reads_noAGORA2': reads_loss_due_mapping
             }
 
         combined_df = pd.DataFrame(frame)
@@ -233,24 +237,24 @@ def ratio_calc(final_df, level):
           """
 
     # Select the relevant data
-    bacter_total_reads = final_df.loc[:, 'totalReadsBacteroidetes']
-    firmic_total_reads = final_df.loc[:, 'totalReadsFirmicutes']
+    bacter_total_reads = final_df.loc[:, 'Bacteroidetes_Tot_Reads']
+    firmic_total_reads = final_df.loc[:, 'Firmicutes_Tot_reads']
 
-    bacter_associated_reads = final_df.loc[:, f'{level}ReadsBacteroidetes']
-    firmic_associated_reads = final_df.loc[:, f'{level}ReadsFirmicutes']
+    bacter_associated_reads = final_df.loc[:, f'Bacteroidetes_{level}_Reads']
+    firmic_associated_reads = final_df.loc[:, f'Firmicutes_{level}_Reads']
 
-    bacter_agora_reads = final_df.loc[:, f'{level}ReadsAGORABacteroidetes']
-    firmic_agora_reads = final_df.loc[:, f'{level}ReadsAGORAFirmicutes']
+    bacter_agora_reads = final_df.loc[:, f'Bacteroidetes_AGORA2_{level}_Reads']
+    firmic_agora_reads = final_df.loc[:, f'Firmicutes_AGORA2_{level}_Reads']
 
     # Calculate the ratios
     total_ratio = firmic_total_reads/bacter_total_reads
-    total_ratio = total_ratio.rename('FBRatioTotal')
+    total_ratio = total_ratio.rename('FB_Ratio_tot')
 
     associated_ratio = firmic_associated_reads/bacter_associated_reads
-    associated_ratio = associated_ratio.rename('FBRatio' + level)
+    associated_ratio = associated_ratio.rename('FB_Ratio_' + level)
 
     agora_ratio = firmic_agora_reads/bacter_agora_reads
-    agora_ratio = agora_ratio.rename('FBRatioAgora')
+    agora_ratio = agora_ratio.rename('FB_Ratio_AGORA2')
 
     # Adds to one single dataframe
     comb_ratio = pd.merge(total_ratio, associated_ratio, left_index=True, right_index=True)
